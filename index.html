@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Digital Systems</title>
+
+<style>
+  :root{
+    --bg:#f4f5f8;
+    --card:#ffffff;
+    --ink:#1e1e2f;
+    --muted:#777;
+    --muted2:#9a9ab3;
+    --purple:#6c4df6;
+    --danger:#e03e3e;
+    --success:#1bb55c;
+    --line:#eee;
+    --shadow:0 10px 25px rgba(0,0,0,0.05);
+    --shadow2:0 4px 12px rgba(0,0,0,0.04);
+    --radius:18px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%; margin:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    overflow:hidden; 
+  }
+
+  
+  .app{
+    position:fixed;
+    inset:0; /* top/right/bottom/left:0 */
+    display:flex;
+    flex-direction:column;
+    background:var(--bg);
+  }
+
+  /* Scroll only the content area */
+  .content{
+    flex:1;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:20px;
+    /* Reserve space visually so last card isn't hidden behind footer */
+    padding-bottom: calc(24px + 165px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .container{
+    max-width:420px;
+    margin:0 auto;
+  }
+
+  .header{margin-bottom:20px;}
+  .header h2{margin:0; font-weight:600; font-size:20px;}
+  .company{font-size:14px; color:var(--muted); margin-top:3px;}
+  .company1{font-size:10px; color:var(--muted); margin-top:3px;}
+  .earn{
+    float:right;
+    font-size:14px;
+    color:var(--purple);
+    font-weight:600;
+  }
+
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:24px;
+    box-shadow:var(--shadow);
+    margin-bottom:20px;
+  }
+
+  .balance{
+    font-size:40px;
+    font-weight:700;
+    color:#2d176f;
+    text-align:center;
+    letter-spacing:-0.3px;
+  }
+  .subtext{
+    text-align:center;
+    color:#555;
+    margin-top:6px;
+    font-size:16px;
+    font-weight:600;
+  }
+  .divider{margin:20px 0; height:1px; background:var(--line);}
+  .row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:12px;
+    font-size:16px;
+  }
+  .row strong{font-weight:700; color:#2b2b3a;}
+  .muted{color:var(--muted2);}
+
+  .info-box{
+    background:#f3f2fa;
+    padding:12px;
+    border-radius:12px;
+    text-align:center;
+    font-size:14px;
+    margin-top:15px;
+    font-weight:600;
+  }
+
+  .tabs{
+    display:flex;
+    background:#e9e7f5;
+    border-radius:22px;
+    overflow:hidden;
+    margin-bottom:15px;
+    padding:4px;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding:10px 0;
+    font-weight:700;
+    font-size:14px;
+    color:#6d6d86;
+    border-radius:18px;
+  }
+  .active-tab{
+    background:#fff;
+    color:#2d176f;
+    box-shadow:0 6px 14px rgba(0,0,0,0.06);
+  }
+
+  /* Transactions */
+
+.transaction{
+  background:#fff;
+  padding:16px;
+  border-radius:14px;
+  margin-bottom:10px;
+  box-shadow:var(--shadow2);
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+}
+
+.tx-left{
+  max-width:65%;
+}
+
+.transaction-title{
+  font-weight:700;
+  font-size:15px;
+}
+
+.transaction-sub{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:4px;
+  font-weight:600;
+}
+
+.amount-wrapper{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  text-align:right;
+}
+
+.amount{
+  font-weight:800;
+  font-size:16px;
+}
+
+.running-balance{
+  font-size:12px;
+  font-weight:500;
+  color:#9CA3AF;
+  margin-top:4px;
+}
+
+.negative{color:var(--danger);}
+.positive{color:var(--success);}
+
+  
+  .footer{
+    flex: none;
+    background:#fff;
+    border-top:1px solid rgba(0,0,0,0.10);
+    /* Raised additional 20% */
+    min-height: calc(105px + env(safe-area-inset-bottom, 0px));
+    padding: 16px 0 calc(48px + env(safe-area-inset-bottom, 0px));
+}
+
+
+
+  .footer .wrap{
+    max-width:420px;
+    margin:0 auto;
+    display:flex;
+    justify-content:space-around;
+    align-items:flex-end;
+    padding:0 10px;
+}
+
+  .footer .item{
+    width:20%;
+    text-align:center;
+    color:#8E8E93;
+    font-size:12px;
+    font-weight:600;
+    line-height:1.1;
+  }
+  .footer .item.active{
+    color:var(--purple);
+    font-weight:700;
+  }
+  .footer .icon{
+    width:24px;
+    height:24px;
+    margin:0 auto 6px;
+    display:block;
+}
+
+  .footer svg{
+    width:24px;height:24px;
+    stroke:currentColor; fill:none;
+    stroke-width:1.8;
+    stroke-linecap:round; stroke-linejoin:round;
+}
+.info-icon {
+        
+        color: #6c4df6;
+        display: inline-flex;
+        align-items: top;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1;
+        top: -6px
+    }
+
+</style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="content">
+      <div class="container">
+
+        <div class="header">
+          <span class="earn">Log Out</span>
+          <h2>Hi, Aleksandr Blackk</h2>
+          <div class="company">EZ STAFF INC</div>
+          <div class="company1">••9019 <span class="info-icon">⇆</span></div>
+        </div>
+
+        <div class="card">
+          <div class="balance">$843,526.03</div>
+          <div class="subtext">Total Account Balance <span class="info-icon">ⓘ</span></div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <span><strong>Available Balance</strong></span>
+            <span><strong>$843,526.03</strong></span>
+          </div>
+
+          <div class="row muted">
+            <span>Reserves</span>
+            <span>$0.00</span>
+          </div>
+
+          <div class="info-box">You have no Pending Transactions</div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active-tab">Recent</div>
+          <div class="tab">Pending</div>
+        </div>
+
+        <!-- Transactions -->
+
+<div class="transaction">
+  <div class="tx-left">
+  <div class="transaction-title">CHECK 002432</div>
+  <div class="transaction-sub">Check Paid • Feb 19</div>
+  </div>
+  <div class="amount-wrapper">
+  <div class="amount negative">-$3,800.00</div>
+  <div class="running-balance">$843,526.03</div>
+  </div>
+  </div>
+  
+  <div class="transaction">
+  <div class="tx-left">
+  <div class="transaction-title">Fee for ACHC4875787330</div>
+  <div class="transaction-sub">Withdrawal • Feb 19</div>
+  </div>
+  <div class="amount-wrapper">
+  <div class="amount negative">-$1.61</div>
+  <div class="running-balance">$847,326.03</div>
+  </div>
+  </div>
+  
+  <div class="transaction">
+  <div class="tx-left">
+  <div class="transaction-title">WIRE IN USMULE INC</div>
+  <div class="transaction-sub">Domestic Wire Deposit • Feb 19</div>
+  </div>
+  <div class="amount-wrapper">
+  <div class="amount positive">$14,725.00</div>
+  <div class="running-balance">$847,327.64</div>
+  </div>
+  </div>
+  
+  <div class="transaction">
+  <div class="tx-left">
+  <div class="transaction-title">MOBILE CHECK DEPOSIT</div>
+  <div class="transaction-sub">Deposit • Feb 18</div>
+  </div>
+  <div class="amount-wrapper">
+  <div class="amount positive">$8,122.50</div>
+  <div class="running-balance">$832,602.64</div>
+  </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="footer" role="navigation" aria-label="Bottom navigation">
+      <div class="wrap">
+        <div class="item active">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3.5 10.5L12 3.5l8.5 7v9a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2z"></path>
+              <path d="M9.5 21.5v-6a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v6"></path>
+            </svg>
+          </span>
+          Home
+        </div>
+
+        <div class="item">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M6 20V11"></path>
+              <path d="M12 20V4"></path>
+              <path d="M18 20V14"></path>
+            </svg>
+          </span>
+          Activity
+        </div>
+
+        <div class="item">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 8h10"></path>
+              <path d="M7 16h10"></path>
+              <path d="M14 5l3 3-3 3"></path>
+              <path d="M10 19l-3-3 3-3"></path>
+            </svg>
+          </span>
+          Move Money
+        </div>
+
+        <div class="item">
+          <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+    <rect x="5" y="5" width="6.5" height="6.5" rx="2"></rect>
+    <rect x="12.5" y="5" width="6.5" height="6.5" rx="2"></rect>
+    <rect x="5" y="12.5" width="6.5" height="6.5" rx="2"></rect>
+    <rect x="12.5" y="12.5" width="6.5" height="6.5" rx="2"></rect>
+  </svg>
+</span>
+          Apps
+        </div>
+
+        <div class="item">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M5 7h14"></path>
+              <path d="M5 12h14"></path>
+              <path d="M5 17h14"></path>
+            </svg>
+          </span>
+          More
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
